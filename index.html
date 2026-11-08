@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#3478de"><title>Sudoku — a little daily clarity</title><link rel="stylesheet" href="style.css"></head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#3478de"><title>Sudoku — a little daily clarity</title><link rel="stylesheet" href="style.css"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Sudoku"></head>
 <body>
 <header class="header"><a class="brand" href="./" aria-label="Sudoku home"><span class="brand-icon">▦</span> sudoku<span class="brand-dot">.</span></a><select id="language" class="language" aria-label="Language"><option value="en">English</option><option value="tr">Türkçe</option><option value="nl">Nederlands</option></select><button id="theme" class="icon-button" aria-label="Toggle dark mode">☾</button></header>
 <main>
@@ -9,4 +9,4 @@
 <aside class="controls"><button id="new-game" class="new-game">New game <span>＋</span></button><div class="tools"><button id="undo"><span class="tool-icon">↶</span>Undo</button><button id="erase"><span class="tool-icon">⌫</span>Erase</button><button id="notes" aria-pressed="false"><span class="tool-icon">✎<b id="notes-badge">OFF</b></span>Notes</button><button id="hint"><span class="tool-icon">♧</span>Hint</button></div><div id="numpad" class="numpad" aria-label="Number pad"></div></aside>
 </section>
 
-</main><div id="toast" class="toast" role="status"></div><dialog id="dialog"><h2 id="dialog-title"></h2><p id="dialog-text"></p><button id="dialog-action" class="new-game">Play again</button><button id="dialog-close" class="text-button">Keep viewing board</button></dialog><script src="languages.js"></script><script src="script.js"></script></body></html>
+</main><div id="toast" class="toast" role="status"></div><dialog id="dialog"><h2 id="dialog-title"></h2><p id="dialog-text"></p><button id="dialog-action" class="new-game">Play again</button><button id="dialog-close" class="text-button">Keep viewing board</button></dialog><script src="languages.js"></script><script src="script.js"></script><script src="pwa.js"></script></body></html>

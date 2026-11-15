@@ -1,10 +1,10 @@
 'use strict';
 // Bump the version whenever the application shell changes.
 const CACHE_PREFIX = `sudoku-${self.registration.scope}-`;
-const CACHE_NAME = `${CACHE_PREFIX}v3`;
+const CACHE_NAME = `${CACHE_PREFIX}v17`;
 const APP_FILES = [
   './', './index.html', './style.css', './languages.js', './script.js',
-  './pwa.js', './manifest.webmanifest', './icons/icon-192.png',
+  './logic.js', './puzzles.js', './pwa.js', './manifest.webmanifest', './icons/icon-192.png',
   './icons/icon-512.png', './icons/maskable-512.png', './icons/apple-touch-icon.png'
 ];
 self.addEventListener('install', event => {

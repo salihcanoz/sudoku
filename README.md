@@ -21,7 +21,7 @@ Initialization randomizes a seed's digits, rows within bands, columns within sta
 
 Quick notes fills every empty square with legal candidates, respects applied hint eliminations, and supports Undo. It leaves entered numbers and the manual Notes toggle unchanged.
 
-Hints use the same technique engine. Elimination hints show the pattern and affected squares; applying one populates candidate notes and retains the elimination for subsequent hints. Undo restores these deductions. Editing a value resets deductions so hints cannot rely on stale eliminations; manually removing a pencil candidate records an elimination for hints, and adding it back cancels that elimination. Blank or partially filled notes are not treated as complete candidate lists. Saved games preserve applied eliminations.
+Hints use the same technique engine. Elimination hints show the pattern and affected squares; applying one populates candidate notes and retains the elimination for subsequent hints. Undo restores these deductions. Editing a value resets deductions so hints cannot rely on stale eliminations; manually removing a pencil candidate records an elimination for hints, and adding it back cancels that elimination. Squares with pencil notes use those notes as their candidate lists for hints; blank squares use legal candidates and tracked eliminations. Saved games preserve applied eliminations.
 
 To rebuild the bank (may take a few minutes): `node tools/build-puzzles.cjs`. The checked-in Expert seed file preserves the sparse 20-clue layouts. To regenerate those seeds, download the catalogue listed in [PUZZLE_SOURCES.md](PUZZLE_SOURCES.md), then run `node tools/build-expert-seeds.cjs /path/to/sudoku17.49151.txt` first.
 

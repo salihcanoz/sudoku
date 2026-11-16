@@ -4,7 +4,7 @@ const vm = require('node:vm');
 const source = fs.readFileSync('script.js', 'utf8');
 const context = vm.createContext({});
 const logic=require('../logic.js');
-context.SudokuLogic=logic;context.candidateExclusions=[];
+context.SudokuLogic=logic;context.candidateExclusions=[];context.notes=[];
 vm.runInContext(source.slice(source.indexOf('function findHint('), source.indexOf('function clearHint(')), context);
 context.peers=logic.peers;
 const hint = (board, preferred = -1) => context.findHint(board, preferred);
@@ -26,3 +26,12 @@ assert.ok(!board.some((v,i) => v === result.number && context.peers(i,result.ind
 const candidates = i => [1,2,3,4,5,6,7,8,9].filter(n => !board.some((v,j) => v===n && context.peers(i,j)));
 assert.deepEqual(Array.from(result.unit).filter(i => !board[i] && candidates(i).includes(result.number)), [result.index]);
 console.log('Passed: single candidates, hidden singles, complete/empty boards, and non-mutating hints.');
+
+// Existing pencil notes constrain hints even when exclusion history is unavailable.
+context.notes=Array.from({length:81},()=>new Set());
+context.notes[0]=new Set([2,3]);
+const noted=context.hintCandidates(Array(81).fill(0));
+assert.deepEqual([...noted[0]],[2,3]);
+assert.equal(noted[1].size,9,'Untouched cells retain legal candidates');
+context.notes[0].delete(3);
+assert.equal(hint(Array(81).fill(0)).number,2);

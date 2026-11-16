@@ -57,9 +57,14 @@ document.addEventListener('languagechange',()=>{render();$('pause').setAttribute
 // Hints derive simple deductions from the visible board, not the answer key.
 let currentHint=null;
 function findHint(board,preferred=-1){
+ return SudokuLogic.next(board,hintCandidates(board),preferred);
+}
+function hintCandidates(board){
  const candidates=SudokuLogic.candidates(board);
  for(const r of candidateExclusions)candidates[r.index].delete(r.number);
- return SudokuLogic.next(board,candidates,preferred);
+ // A square with pencil notes uses those candidates; untouched squares use legal candidates.
+ for(let i=0;i<81;i++)if(notes[i]?.size)for(const n of candidates[i])if(!notes[i].has(n))candidates[i].delete(n);
+ return candidates;
 }
 function clearHint(){
  // render() also runs during startup, before hint state is initialized.
@@ -107,7 +112,7 @@ $('hint-close').onclick=clearHint;
 $('hint-apply').onclick=()=>{
  if(paused||finished||completing||$('hint-panel').hidden||!currentHint)return;
  const hint=currentHint;selected=hint.index;
- if(hint.removals){snapshot();candidateExclusions.push(...hint.removals);const c=SudokuLogic.candidates(values);for(const r of candidateExclusions)c[r.index].delete(r.number);notes=c;render();}
+ if(hint.removals){snapshot();candidateExclusions.push(...hint.removals);notes=hintCandidates(values);render();}
  else if(hint.kind==='error')$('erase').click();else enter(hint.number,true);
 };
 document.addEventListener('languagechange',updateHintText);

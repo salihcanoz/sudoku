@@ -52,6 +52,7 @@ for(const state of ['paused','finished','completing']){
 }
 // Quick notes fills the board without changing values, mode, or hint eliminations.
 vm.runInContext(`
+ notes=Array.from({length:81},()=>new Set());
  showHint();candidateExclusions=currentHint.removals.map(r=>({...r}));
  notes=Array.from({length:81},()=>new Set());
 `,context);

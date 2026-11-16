@@ -20,6 +20,20 @@ assert.equal(vm.runInContext('!!currentHint.removals',context),true);
 get('hint-apply').onclick();assert.ok(vm.runInContext('candidateExclusions.length',context)>0);
 assert.ok(JSON.parse(storage.get('clear-sudoku')).candidateExclusions.length>0);
 get('undo').onclick();assert.equal(vm.runInContext('candidateExclusions.length',context),0);
+// Manual pencil removals feed hints, persist, and can be undone or added back.
+vm.runInContext(`
+ showHint();globalThis.manualRemoval={...currentHint.removals[0]};
+ selected=manualRemoval.index;notes[selected].add(manualRemoval.number);noteMode=true;
+ enter(manualRemoval.number);
+`,context);
+assert.equal(vm.runInContext('candidateExclusions.some(r=>r.index===manualRemoval.index&&r.number===manualRemoval.number)',context),true);
+assert.ok(JSON.parse(storage.get('clear-sudoku')).candidateExclusions.some(r=>r.index===vm.runInContext('manualRemoval.index',context)&&r.number===vm.runInContext('manualRemoval.number',context)));
+assert.equal(vm.runInContext('findHint(values)?.removals?.some(r=>r.index===manualRemoval.index&&r.number===manualRemoval.number)||false',context),false);
+get('undo').onclick();
+assert.equal(vm.runInContext('notes[manualRemoval.index].has(manualRemoval.number)&&candidateExclusions.length===0',context),true);
+vm.runInContext('selected=manualRemoval.index;enter(manualRemoval.number);enter(manualRemoval.number);',context);
+assert.equal(vm.runInContext('notes[manualRemoval.index].has(manualRemoval.number)&&candidateExclusions.length===0',context),true);
+vm.runInContext('noteMode=false;',context);
 // Quick notes fills the board without changing values, mode, or hint eliminations.
 vm.runInContext(`
  showHint();candidateExclusions=currentHint.removals.map(r=>({...r}));

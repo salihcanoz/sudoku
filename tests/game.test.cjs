@@ -17,6 +17,7 @@ vm.runInContext(`{
  render();showHint();
 }`,context);
 assert.equal(vm.runInContext('!!currentHint.removals',context),true);
+assert.equal(vm.runInContext('highlightedNumber===currentHint.removals[0].number',context),true,'Removal hints highlight the candidate across the board');
 get('hint-apply').onclick();assert.ok(vm.runInContext('candidateExclusions.length',context)>0);
 assert.ok(JSON.parse(storage.get('clear-sudoku')).candidateExclusions.length>0);
 get('undo').onclick();assert.equal(vm.runInContext('candidateExclusions.length',context),0);
@@ -34,6 +35,21 @@ assert.equal(vm.runInContext('notes[manualRemoval.index].has(manualRemoval.numbe
 vm.runInContext('selected=manualRemoval.index;enter(manualRemoval.number);enter(manualRemoval.number);',context);
 assert.equal(vm.runInContext('notes[manualRemoval.index].has(manualRemoval.number)&&candidateExclusions.length===0',context),true);
 vm.runInContext('noteMode=false;',context);
+// Clicking a visible pencil candidate removes it without changing Notes mode.
+vm.runInContext('selected=manualRemoval.index;notes[selected].add(manualRemoval.number);noteMode=false;render();',context);
+const candidateIndex=vm.runInContext('manualRemoval.index',context);
+const candidateNumber=vm.runInContext('manualRemoval.number',context);
+let stopped=false;
+get('board').children[candidateIndex].children[0].children[candidateNumber-1].onclick({stopPropagation(){stopped=true;}});
+assert.ok(stopped);
+assert.equal(vm.runInContext('!notes[manualRemoval.index].has(manualRemoval.number)&&!noteMode&&candidateExclusions.some(r=>r.index===manualRemoval.index&&r.number===manualRemoval.number)',context),true);
+get('undo').onclick();
+assert.equal(vm.runInContext('notes[manualRemoval.index].has(manualRemoval.number)&&candidateExclusions.length===0',context),true);
+for(const state of ['paused','finished','completing']){
+ vm.runInContext(state+'=true;removeCandidate(manualRemoval.index,manualRemoval.number);',context);
+ assert.equal(vm.runInContext('notes[manualRemoval.index].has(manualRemoval.number)&&candidateExclusions.length===0',context),true);
+ vm.runInContext(state+'=false;',context);
+}
 // Quick notes fills the board without changing values, mode, or hint eliminations.
 vm.runInContext(`
  showHint();candidateExclusions=currentHint.removals.map(r=>({...r}));
